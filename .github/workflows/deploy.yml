@@ -26,25 +26,24 @@ jobs:
       
       - name: Log in to Azure Container Registry
         run: |
-          az acr login --name <YOUR_ACR_NAME>
+          az acr login --name federicoregistry
 
       - name: Tag Docker image
         run: |
-          docker tag myapp:${{ github.sha }} <YOUR_ACR_NAME>.azurecr.io/myapp:${{ github.sha }}
+          docker tag myapp:${{ github.sha }} federicoregistry.azurecr.io/myapp:${{ github.sha }}
 
       - name: Push Docker image to Azure Container Registry
         run: |
-          docker push <YOUR_ACR_NAME>.azurecr.io/myapp:${{ github.sha }}
+          docker push federicoregistry.azurecr.io/myapp:${{ github.sha }}
 
       - name: Deploy to Azure Container Instances
         uses: Azure/aci-deploy@v1
         with:
-          resource-group: <YOUR_RESOURCE_GROUP>
-          name: <YOUR_CONTAINER_GROUP_NAME>
-          image: <YOUR_ACR_NAME>.azurecr.io/myapp:${{ github.sha }}
-          dns-name-label: <YOUR_DNS_NAME_LABEL>
-          location: <YOUR_LOCATION>
-          registry-login-server: <YOUR_ACR_NAME>.azurecr.io
+          resource-group: containers
+          name: web1
+          image: federicoregistry.azurecr.io/myapp:${{ github.sha }}
+          location: "Canada Central"
+          registry-login-server: federicoregistry.azurecr.io
           registry-username: ${{ secrets.ACR_USERNAME }}
           registry-password: ${{ secrets.ACR_PASSWORD }}
           cpu: 1
